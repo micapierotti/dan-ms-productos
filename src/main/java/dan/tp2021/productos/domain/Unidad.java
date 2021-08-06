@@ -4,6 +4,7 @@ public class Unidad {
 
 	private Integer id;
 	private String descripcion;
+
 	public Integer getId() {
 		return id;
 	}
