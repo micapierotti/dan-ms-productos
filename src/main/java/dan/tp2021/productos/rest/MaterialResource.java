@@ -20,20 +20,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/productos")
 @Api(value = "MaterialResource", description = "Permite gestionar los materiales")
 public class MaterialResource {
-	@Autowired
+
+    @Autowired
     MaterialService materialSrv;
 
     @PostMapping
     @ApiOperation(value = "Crear un material")
     public ResponseEntity<String> crear(@RequestBody Material nuevoMaterial){
 
-        System.out.println("Crear material "+ nuevoMaterial);
+        System.out.println("Crear material: "+ nuevoMaterial);
 
         if(nuevoMaterial.getNombre()==null)
             return ResponseEntity.badRequest().body("El material debe tener un nombre especificado.");
@@ -46,7 +46,7 @@ public class MaterialResource {
         return ResponseEntity.status(HttpStatus.CREATED).body("OK");
     }
 
-    @PutMapping(path = "/{idMaterial}")
+    @PutMapping(path = "/{id}")
     @ApiOperation(value = "Actualizar un material")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Actualizado correctamente"),
@@ -54,8 +54,8 @@ public class MaterialResource {
         @ApiResponse(code = 403, message = "Prohibido"),
         @ApiResponse(code = 404, message = "El ID no existe")
     })
-    public ResponseEntity<Material> actualizar(@RequestBody Material materialActualizado,  @PathVariable Integer idMaterial){
-        return ResponseEntity.ok(materialSrv.actualizarMaterial(materialActualizado, idMaterial));
+    public ResponseEntity<Material> actualizar(@RequestBody Material materialActualizado,  @PathVariable Integer id){
+        return ResponseEntity.ok(materialSrv.actualizarMaterial(materialActualizado, id));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -79,9 +79,9 @@ public class MaterialResource {
 
     @GetMapping
     @ApiOperation(value = "Devuelve todos los productos")
-    public ResponseEntity<List<Material>> buscarTodos(@RequestParam(name="razonSocial", required = false) String razonSocial) {
+    public ResponseEntity<List<Material>> buscarTodos() {
         List<Material> materiales = materialSrv.buscarTodos();
-        if(materiales.size()) return ResponseEntity.ok(clientes);
+        if(materiales.size()>0) return ResponseEntity.ok(materiales);
         return ResponseEntity.notFound().build();
     }
 }

@@ -2,8 +2,11 @@ package dan.tp2021.productos.services.implementacion;
 
 import dan.tp2021.productos.database.MaterialRepository;
 import dan.tp2021.productos.domain.*;
+import dan.tp2021.productos.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
@@ -14,7 +17,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Material crearMaterial(Material m) {
         this.materialRepository.save(m);
-        return m.getId();
+        return m;
     }
 
     @Override
@@ -23,8 +26,7 @@ public class MaterialServiceImpl implements MaterialService {
 
         if(m != null){
             materialRepository.delete(m);
-            if (materialRepository.findById(id).isPresent()) return false;
-            return true;
+            return !materialRepository.findById(id).isPresent();
         } else {
             return false;
         }
@@ -44,6 +46,11 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
+    public Material buscarPorNombre(String nombre) {
+        return null;
+    }
+
+    @Override
     public Material buscarPorId(Integer id) {
         try{
             if (materialRepository.findById(id).isPresent())
@@ -57,9 +64,19 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
+    public List<Material> buscarPorRangoStock(Integer stockMin, Integer stockMax) {
+        return null;
+    }
+
+    @Override
+    public List<Material> buscarPorPrecio(Double precio) {
+        return null;
+    }
+
+    @Override
     public List<Material> buscarTodos() {
         try{
-            return materialRepository.findAll();
+            return (List<Material>) materialRepository.findAll();
         } catch (Exception e){
             System.out.println(e.getMessage());
             return null;
