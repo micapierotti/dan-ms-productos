@@ -3,8 +3,7 @@ package dan.tp2021.productos.rest;
 import dan.tp2021.productos.domain.Material;
 import dan.tp2021.productos.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import io.swagger.annotations.Api;
@@ -14,12 +13,6 @@ import io.swagger.annotations.ApiResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -82,6 +75,30 @@ public class MaterialResource {
     public ResponseEntity<List<Material>> buscarTodos() {
         List<Material> materiales = materialSrv.buscarTodos();
         if(materiales.size()>0) return ResponseEntity.ok(materiales);
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/get-by-price/{price}")
+    @ApiOperation(value = "Devuelve todos los productos con el precio pedido")
+    public ResponseEntity<List<Material>> getMaterialsByPrice(@PathVariable Double price) {
+        List<Material> materiales = materialSrv.buscarPorPrecio(price);
+        if(materiales.size()>0) return ResponseEntity.ok(materiales);
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/get-by-stock-range")
+    @ApiOperation(value = "Devuelve todos los productos según el rango de stock")
+    public ResponseEntity<List<Material>> getMaterialsByStockRange(@RequestParam(required = false) Integer minStock, @RequestParam(required = false) Integer maxStock) {
+        List<Material> materiales = materialSrv.buscarPorRangoStock(minStock, maxStock);
+        if(materiales.size()>0) return ResponseEntity.ok(materiales);
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/get-by-name/{name}")
+    @ApiOperation(value = "Devuelve un producto según el nombre")
+    public ResponseEntity<Material> getMaterialByName(@PathVariable String name) {
+        Material material = materialSrv.buscarPorNombre(name);
+        if(material != null) return ResponseEntity.ok(material);
         return ResponseEntity.notFound().build();
     }
 }

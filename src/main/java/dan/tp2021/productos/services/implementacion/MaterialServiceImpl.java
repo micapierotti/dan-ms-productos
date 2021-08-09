@@ -6,6 +6,7 @@ import dan.tp2021.productos.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,6 +48,14 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public Material buscarPorNombre(String nombre) {
+        try {
+            //return materialRepository.findByName(nombre);
+            List<Material> materiales = (List<Material>) materialRepository.findAll();
+            Material material = materiales.stream().filter((m) -> m.getNombre() == nombre).findFirst().get();
+            return material;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 
@@ -65,18 +74,42 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public List<Material> buscarPorRangoStock(Integer stockMin, Integer stockMax) {
-        return null;
-    }
-
-    @Override
-    public List<Material> buscarPorPrecio(Double precio) {
-        return null;
+        try{
+            List<Material> materiales = (List<Material>) materialRepository.findAll();
+            List<Material> materialesFiltrados = new ArrayList<Material>();
+            materiales.stream().forEach((m) -> {
+                if(m.getStockActual() >= stockMin && m.getStockActual() <= stockMax) {
+                    materialesFiltrados.add(m);
+                }
+            });
+            return materialesFiltrados;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public List<Material> buscarTodos() {
         try{
             return (List<Material>) materialRepository.findAll();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Material> buscarPorPrecio(Double precio) {
+        try{
+            List<Material> materiales = (List<Material>) materialRepository.findAll();
+            List<Material> materialesFiltrados = new ArrayList<Material>();
+            materiales.stream().forEach((m) -> {
+                if(m.getPrecio() == precio) {
+                    materialesFiltrados.add(m);
+                }
+            });
+            return materialesFiltrados;
         } catch (Exception e){
             System.out.println(e.getMessage());
             return null;
