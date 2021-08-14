@@ -1,7 +1,10 @@
 package dan.tp2021.productos.domain;
+import javax.persistence.*;
 
+@Entity
 public class Material {
 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nombre;
 	private String descripcion;

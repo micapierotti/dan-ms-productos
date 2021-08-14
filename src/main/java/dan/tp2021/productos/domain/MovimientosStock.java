@@ -1,15 +1,24 @@
 package dan.tp2021.productos.domain;
-
 import java.time.Instant;
+import javax.persistence.*;
 
+@Entity
 public class MovimientosStock {
-	
+
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@OneToOne
+	@JoinColumn(name = "DETALLE_PED_ID")
 	private DetallePedido detallePedido;
+	@OneToOne
+	@JoinColumn(name = "DETALLE_PROV_ID")
 	private DetalleProvision detalleProvision;
+	@OneToOne
+	@JoinColumn(name = "MATERIAL_ID")
 	private Material material;
 	private Integer cantidadEntrada;
 	private Integer cantidadSalida;
+	//TODO: ver como mapear instant
 	private Instant fecha;
 	
 	public Integer getId() {
