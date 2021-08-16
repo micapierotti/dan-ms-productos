@@ -2,11 +2,17 @@ package dan.tp2021.productos.domain;
 
 import java.time.Instant;
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
 public class Provision {
 
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	//TODO: ver como mapear instant
 	private Instant fechaProvision;
+	@OneToMany(targetEntity = DetalleProvision.class, cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<DetalleProvision> detalle;
 	
 	public Integer getId() {
