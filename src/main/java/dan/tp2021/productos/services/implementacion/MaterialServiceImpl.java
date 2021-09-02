@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MaterialServiceImpl implements MaterialService {
+public class MaterialServiceImpl implements MaterialService{
 
-    @Autowired
+
     MaterialRepository materialRepository;
+
+    public MaterialServiceImpl(MaterialRepository materialRepository) {
+        this.materialRepository = materialRepository;
+    }
 
     @Override
     public Material crearMaterial(Material m) {

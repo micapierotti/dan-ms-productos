@@ -1,6 +1,6 @@
 package dan.tp2021.productos.domain;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
@@ -9,8 +9,8 @@ public class Provision {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	//TODO: ver como mapear instant
-	private Instant fechaProvision;
+
+	private Date fechaProvision;
 	@OneToMany(targetEntity = DetalleProvision.class, cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<DetalleProvision> detalle;
@@ -21,10 +21,10 @@ public class Provision {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Instant getFechaProvision() {
+	public Date getFechaProvision() {
 		return fechaProvision;
 	}
-	public void setFechaProvision(Instant fechaProvision) {
+	public void setFechaProvision(Date fechaProvision) {
 		this.fechaProvision = fechaProvision;
 	}
 	public List<DetalleProvision> getDetalle() {
@@ -34,5 +34,12 @@ public class Provision {
 		this.detalle = detalle;
 	}
 
-	
+	public Provision(Integer id, Date fechaProvision, List<DetalleProvision> detalle) {
+		this.id = id;
+		this.fechaProvision = fechaProvision;
+		this.detalle = detalle;
+	}
+
+	public Provision() {
+	}
 }

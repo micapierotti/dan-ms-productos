@@ -4,6 +4,7 @@ import javax.persistence.*;
 @Entity
 public class Material {
 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nombre;
@@ -48,5 +49,16 @@ public class Material {
 	public void setStockMinimo(Integer stockMinimo) {
 		this.stockMinimo = stockMinimo;
 	}
-	
+
+	public Material(Integer id, String nombre, String descripcion, Double precio, Integer stockActual, Integer stockMinimo) {
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.precio = precio;
+		this.stockActual = stockActual;
+		this.stockMinimo = stockMinimo;
+	}
+
+	public Material() {
+	}
 }

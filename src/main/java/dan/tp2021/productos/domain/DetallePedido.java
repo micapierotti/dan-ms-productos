@@ -10,6 +10,10 @@ public class DetallePedido {
 	private Material material;
 	private Integer cantidad;
 
+	public DetallePedido() {
+
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -29,7 +33,10 @@ public class DetallePedido {
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
-	
-	
-	
+
+	public DetallePedido(Integer id, Material material, Integer cantidad) {
+		this.id = id;
+		this.material = material;
+		this.cantidad = cantidad;
+	}
 }

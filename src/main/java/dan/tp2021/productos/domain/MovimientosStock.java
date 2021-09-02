@@ -1,5 +1,6 @@
 package dan.tp2021.productos.domain;
 import java.time.Instant;
+import java.util.Date;
 import javax.persistence.*;
 
 @Entity
@@ -18,8 +19,8 @@ public class MovimientosStock {
 	private Material material;
 	private Integer cantidadEntrada;
 	private Integer cantidadSalida;
-	//TODO: ver como mapear instant
-	private Instant fecha;
+
+	private Date fecha;
 	
 	public Integer getId() {
 		return id;
@@ -57,12 +58,23 @@ public class MovimientosStock {
 	public void setCantidadSalida(Integer cantidadSalida) {
 		this.cantidadSalida = cantidadSalida;
 	}
-	public Instant getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(Instant fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	
-	
+
+	public MovimientosStock(Integer id, DetallePedido detallePedido, DetalleProvision detalleProvision, Material material, Integer cantidadEntrada, Integer cantidadSalida, Date fecha) {
+		this.id = id;
+		this.detallePedido = detallePedido;
+		this.detalleProvision = detalleProvision;
+		this.material = material;
+		this.cantidadEntrada = cantidadEntrada;
+		this.cantidadSalida = cantidadSalida;
+		this.fecha = fecha;
+	}
+
+	public MovimientosStock() {
+	}
 }
