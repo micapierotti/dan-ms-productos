@@ -4,7 +4,7 @@ import javax.persistence.*;
 @Entity
 public class Material {
 
-	@Id //@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -52,14 +52,21 @@ public class Material {
 	public void setStockMinimo(Integer stockMinimo) {
 		this.stockMinimo = stockMinimo;
 	}
+	public Unidad getUnidad() {
+		return unidad;
+	}
+	public void setUnidad(Unidad unidad) {
+		this.unidad = unidad;
+	}
 
-	public Material(Integer id, String nombre, String descripcion, Double precio, Integer stockActual, Integer stockMinimo) {
+	public Material(Integer id, String nombre, String descripcion, Double precio, Integer stockActual, Integer stockMinimo, Unidad unidad) {
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.precio = precio;
 		this.stockActual = stockActual;
 		this.stockMinimo = stockMinimo;
+		this.unidad = unidad;
 	}
 
 	public Material() {
