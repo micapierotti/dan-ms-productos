@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 public class DetalleProvision {
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
 	@JoinColumn(name = "MATERIAL_ID")

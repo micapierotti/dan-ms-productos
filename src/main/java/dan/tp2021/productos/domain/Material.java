@@ -4,7 +4,7 @@ import javax.persistence.*;
 @Entity
 public class Material {
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id //@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nombre;
 	private String descripcion;
