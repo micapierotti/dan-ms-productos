@@ -16,4 +16,5 @@ public interface MaterialService {
     List<Material> buscarPorPrecio(Double precio);
     List<Material> buscarTodos();
     void registrarMovimientoStock(PedidoDTO pedidoDTO);
+    boolean existeNombre(String nombre);
 }

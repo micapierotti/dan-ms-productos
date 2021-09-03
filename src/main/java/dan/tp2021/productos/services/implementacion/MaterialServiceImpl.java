@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class MaterialServiceImpl implements MaterialService{
 
-
     MaterialRepository materialRepository;
     ProvisionService provisionService;
 
@@ -36,6 +35,7 @@ public class MaterialServiceImpl implements MaterialService{
         Material m = buscarPorId(id);
 
         if(m != null){
+            m.setUnidad(null);
             materialRepository.delete(m);
             return !materialRepository.findById(id).isPresent();
         } else {
@@ -59,14 +59,23 @@ public class MaterialServiceImpl implements MaterialService{
     @Override
     public Material buscarPorNombre(String nombre) {
         try {
-            //return materialRepository.findByName(nombre);
-            List<Material> materiales = (List<Material>) materialRepository.findAll();
-            Material material = materiales.stream().filter((m) -> m.getNombre() == nombre).findFirst().get();
-            return material;
+            if (materialRepository.findByNombre(nombre).isPresent())
+                return materialRepository.findByNombre(nombre).get();
+            else
+                throw new RuntimeException("No se halló el material con nombre " + nombre);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public boolean existeNombre(String nombre){
+        try {
+            return materialRepository.findByNombre(nombre).isPresent();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -87,12 +96,24 @@ public class MaterialServiceImpl implements MaterialService{
         try{
             List<Material> materiales = (List<Material>) materialRepository.findAll();
             List<Material> materialesFiltrados = new ArrayList<Material>();
+
             materiales.stream().forEach((m) -> {
                 if(m.getStockActual() >= stockMin && m.getStockActual() <= stockMax) {
                     materialesFiltrados.add(m);
                 }
             });
+
             return materialesFiltrados;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Material> buscarPorPrecio(Double precio) {
+        try{
+            return materialRepository.findByPrecio(precio);
         } catch (Exception e){
             System.out.println(e.getMessage());
             return null;
@@ -138,22 +159,5 @@ public class MaterialServiceImpl implements MaterialService{
             provisionService.crearProvision(listaDetalles);
         }
         materialRepository.saveAll(listaMateriales);
-    }
-
-    @Override
-    public List<Material> buscarPorPrecio(Double precio) {
-        try{
-            List<Material> materiales = (List<Material>) materialRepository.findAll();
-            List<Material> materialesFiltrados = new ArrayList<Material>();
-            materiales.stream().forEach((m) -> {
-                if(m.getPrecio() == precio) {
-                    materialesFiltrados.add(m);
-                }
-            });
-            return materialesFiltrados;
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
-        }
     }
 }
