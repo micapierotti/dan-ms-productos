@@ -1,12 +1,9 @@
 package dan.tp2021.productos.domain;
 import javax.persistence.*;
 
-@Entity
 public class DetallePedido {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Integer id;
-	@OneToOne
-	@JoinColumn(name = "MATERIAL_ID")
 	private Material material;
 	private Integer cantidad;
 

@@ -12,13 +12,15 @@ public class DetalleProvision {
 	private Material material;
 	private Integer cantidad;
 
+
+
+
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	public Integer getCantidad() {
 		return cantidad;
 	}
@@ -32,8 +34,7 @@ public class DetalleProvision {
 		this.material = material;
 	}
 
-	public DetalleProvision(Integer id, Material material, Integer cantidad) {
-		this.id = id;
+	public DetalleProvision(Material material, Integer cantidad) {
 		this.material = material;
 		this.cantidad = cantidad;
 	}

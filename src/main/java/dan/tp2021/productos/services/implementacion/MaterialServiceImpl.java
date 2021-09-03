@@ -2,21 +2,27 @@ package dan.tp2021.productos.services.implementacion;
 
 import dan.tp2021.productos.database.MaterialRepository;
 import dan.tp2021.productos.domain.*;
+import dan.tp2021.productos.dto.PedidoDTO;
 import dan.tp2021.productos.services.MaterialService;
+import dan.tp2021.productos.services.ProvisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MaterialServiceImpl implements MaterialService{
 
 
     MaterialRepository materialRepository;
+    ProvisionService provisionService;
 
-    public MaterialServiceImpl(MaterialRepository materialRepository) {
+    public MaterialServiceImpl(MaterialRepository materialRepository, ProvisionService provisionService) {
         this.materialRepository = materialRepository;
+        this.provisionService = provisionService;
     }
 
     @Override
@@ -101,6 +107,37 @@ public class MaterialServiceImpl implements MaterialService{
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public void registrarMovimientoStock(PedidoDTO pedidoDTO) {
+        //TODO revisar si anda artemis?
+        
+        //Se registra un movimiento de stock del producto y además actualizará el stock actual en la tabla de productos.
+        //Si se llegó a un stock debajo del mínimo se crea una nueva orden de provisión.
+
+        Map<Integer, Integer> mapIdMaterialesCant = pedidoDTO.getDetallePedidoDTOList()
+                                                    .stream().collect(Collectors
+                        .toMap(detallePedidoDTO -> detallePedidoDTO.getProductoId(), detallePedidoDTO -> detallePedidoDTO.getCantidad()));
+
+        List<Integer> idMateriales = new ArrayList<>(mapIdMaterialesCant.keySet());
+        List<Material> listaMateriales = idMateriales.stream().map( id -> buscarPorId(id)).collect(Collectors.toList());
+        List<DetalleProvision> listaDetalles = new ArrayList<>();
+        Integer cantidad;
+
+        for(Material m: listaMateriales){
+            cantidad = mapIdMaterialesCant.get(m.getId());
+
+            m.setStockActual(m.getStockActual() - cantidad);
+
+            if(m.getStockMinimo() >= m.getStockActual()){
+               listaDetalles.add(new DetalleProvision(m,cantidad));
+            }
+        }
+        if(!(listaDetalles.size() == 0)){
+            provisionService.crearProvision(listaDetalles);
+        }
+        materialRepository.saveAll(listaMateriales);
     }
 
     @Override

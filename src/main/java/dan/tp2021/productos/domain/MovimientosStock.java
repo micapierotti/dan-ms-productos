@@ -8,9 +8,7 @@ public class MovimientosStock {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@OneToOne
-	@JoinColumn(name = "DETALLE_PED_ID")
-	private DetallePedido detallePedido;
+	private Integer detallePedidoId;
 	@OneToOne
 	@JoinColumn(name = "DETALLE_PROV_ID")
 	private DetalleProvision detalleProvision;
@@ -19,21 +17,24 @@ public class MovimientosStock {
 	private Material material;
 	private Integer cantidadEntrada;
 	private Integer cantidadSalida;
-
 	private Date fecha;
-	
+
+
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public DetallePedido getDetallePedido() {
-		return detallePedido;
+
+	public Integer getDetallePedidoId() {
+		return detallePedidoId;
 	}
-	public void setDetallePedido(DetallePedido detallePedido) {
-		this.detallePedido = detallePedido;
+
+	public void setDetallePedidoId(Integer detallePedidoId) {
+		this.detallePedidoId = detallePedidoId;
 	}
+
 	public DetalleProvision getDetalleProvision() {
 		return detalleProvision;
 	}
@@ -65,9 +66,9 @@ public class MovimientosStock {
 		this.fecha = fecha;
 	}
 
-	public MovimientosStock(Integer id, DetallePedido detallePedido, DetalleProvision detalleProvision, Material material, Integer cantidadEntrada, Integer cantidadSalida, Date fecha) {
+	public MovimientosStock(Integer id, Integer detallePedidoId, DetalleProvision detalleProvision, Material material, Integer cantidadEntrada, Integer cantidadSalida, Date fecha) {
 		this.id = id;
-		this.detallePedido = detallePedido;
+		this.detallePedidoId = detallePedidoId;
 		this.detalleProvision = detalleProvision;
 		this.material = material;
 		this.cantidadEntrada = cantidadEntrada;

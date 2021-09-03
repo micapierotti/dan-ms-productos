@@ -12,7 +12,11 @@ public class Material {
 	private Double precio;
 	private Integer stockActual;
 	private Integer stockMinimo;
-	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "UNIDAD_ID")
+	Unidad unidad;
+
+
 	public Integer getId() {
 		return id;
 	}

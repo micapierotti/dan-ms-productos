@@ -9,12 +9,13 @@ public class Provision {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
 	private Date fechaProvision;
 	@OneToMany(targetEntity = DetalleProvision.class, cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<DetalleProvision> detalle;
-	
+
+
+
 	public Integer getId() {
 		return id;
 	}
