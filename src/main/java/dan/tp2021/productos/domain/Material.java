@@ -11,7 +11,11 @@ public class Material {
 	private Double precio;
 	private Integer stockActual;
 	private Integer stockMinimo;
-	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "UNIDAD_ID")
+	Unidad unidad;
+
+
 	public Integer getId() {
 		return id;
 	}
@@ -48,5 +52,16 @@ public class Material {
 	public void setStockMinimo(Integer stockMinimo) {
 		this.stockMinimo = stockMinimo;
 	}
-	
+
+	public Material(Integer id, String nombre, String descripcion, Double precio, Integer stockActual, Integer stockMinimo) {
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.precio = precio;
+		this.stockActual = stockActual;
+		this.stockMinimo = stockMinimo;
+	}
+
+	public Material() {
+	}
 }

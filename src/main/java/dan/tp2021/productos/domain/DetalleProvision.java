@@ -4,7 +4,8 @@ import javax.persistence.*;
 
 @Entity
 public class DetalleProvision {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
 	@JoinColumn(name = "MATERIAL_ID")
@@ -30,7 +31,12 @@ public class DetalleProvision {
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
-	
-	
-	
+
+	public DetalleProvision(Material material, Integer cantidad) {
+		this.material = material;
+		this.cantidad = cantidad;
+	}
+
+	public DetalleProvision() {
+	}
 }
