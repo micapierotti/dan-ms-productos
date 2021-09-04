@@ -4,14 +4,18 @@ import javax.persistence.*;
 @Entity
 public class Material {
 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	private Integer id;
 	private String nombre;
 	private String descripcion;
 	private Double precio;
 	private Integer stockActual;
 	private Integer stockMinimo;
-	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "UNIDAD_ID")
+	Unidad unidad;
+
+
 	public Integer getId() {
 		return id;
 	}
@@ -48,5 +52,23 @@ public class Material {
 	public void setStockMinimo(Integer stockMinimo) {
 		this.stockMinimo = stockMinimo;
 	}
-	
+	public Unidad getUnidad() {
+		return unidad;
+	}
+	public void setUnidad(Unidad unidad) {
+		this.unidad = unidad;
+	}
+
+	public Material(Integer id, String nombre, String descripcion, Double precio, Integer stockActual, Integer stockMinimo, Unidad unidad) {
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.precio = precio;
+		this.stockActual = stockActual;
+		this.stockMinimo = stockMinimo;
+		this.unidad = unidad;
+	}
+
+	public Material() {
+	}
 }
