@@ -1,10 +1,11 @@
 package dan.tp2021.productos.services.implementacion;
 
-import dan.tp2021.productos.dto.PedidoDTO;
 import dan.tp2021.productos.services.ArtemisService;
 import dan.tp2021.productos.services.MaterialService;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class ArtemisServiceImpl implements ArtemisService {
@@ -15,8 +16,8 @@ public class ArtemisServiceImpl implements ArtemisService {
         this.materialService = materialService;
     }
 
-    @JmsListener(destination = "someQueue")
-    public void recibirMensaje(PedidoDTO pedidoDTO) {
-        materialService.registrarMovimientoStock(pedidoDTO);
+    @JmsListener(destination = "COLA_PEDIDOS")
+    public void recibirMensaje(ArrayList<Integer> idsDetalles){
+        materialService.registrarMovimientoStock(idsDetalles);
     }
 }

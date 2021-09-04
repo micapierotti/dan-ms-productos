@@ -14,8 +14,6 @@ public class Provision {
 			fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<DetalleProvision> detalle;
 
-
-
 	public Integer getId() {
 		return id;
 	}
@@ -34,13 +32,11 @@ public class Provision {
 	public void setDetalle(List<DetalleProvision> detalle) {
 		this.detalle = detalle;
 	}
-
 	public Provision(Integer id, Date fechaProvision, List<DetalleProvision> detalle) {
 		this.id = id;
 		this.fechaProvision = fechaProvision;
 		this.detalle = detalle;
 	}
-
 	public Provision() {
 	}
 }

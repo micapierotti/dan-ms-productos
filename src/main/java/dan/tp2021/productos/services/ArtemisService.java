@@ -1,7 +1,6 @@
 package dan.tp2021.productos.services;
-
-import dan.tp2021.productos.dto.PedidoDTO;
+import java.util.ArrayList;
 
 public interface ArtemisService {
-    void recibirMensaje(PedidoDTO pedidoDTO);
+    void recibirMensaje(ArrayList<Integer> idsDetalles);
 }

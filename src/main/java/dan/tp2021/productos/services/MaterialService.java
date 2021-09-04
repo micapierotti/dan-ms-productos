@@ -1,8 +1,7 @@
 package dan.tp2021.productos.services;
 
 import dan.tp2021.productos.domain.Material;
-import dan.tp2021.productos.dto.PedidoDTO;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public interface MaterialService {
@@ -15,6 +14,6 @@ public interface MaterialService {
     List<Material> buscarPorRangoStock(Integer stockMin, Integer stockMax);
     List<Material> buscarPorPrecio(Double precio);
     List<Material> buscarTodos();
-    void registrarMovimientoStock(PedidoDTO pedidoDTO);
+    void registrarMovimientoStock(ArrayList<Integer> idsDetalles);
     boolean existeNombre(String nombre);
 }

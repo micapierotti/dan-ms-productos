@@ -1,28 +1,34 @@
 package dan.tp2021.productos.services.implementacion;
 
 import dan.tp2021.productos.database.MaterialRepository;
+import dan.tp2021.productos.database.MovimientoStockRepository;
 import dan.tp2021.productos.domain.*;
-import dan.tp2021.productos.dto.PedidoDTO;
+import dan.tp2021.productos.dto.DetallePedidoDTO;
 import dan.tp2021.productos.services.MaterialService;
 import dan.tp2021.productos.services.ProvisionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class MaterialServiceImpl implements MaterialService{
 
-    MaterialRepository materialRepository;
-    ProvisionService provisionService;
+    private MaterialRepository materialRepository;
+    private ProvisionService provisionService;
+    private MovimientoStockRepository movimientoRepository;
 
-    public MaterialServiceImpl(MaterialRepository materialRepository, ProvisionService provisionService) {
+    public MaterialServiceImpl(MaterialRepository materialRepository, ProvisionService provisionService, MovimientoStockRepository movimientoRepository) {
         this.materialRepository = materialRepository;
         this.provisionService = provisionService;
+        this.movimientoRepository = movimientoRepository;
     }
+
+    private static final String REST_API_PEDIDO_URL = "http://localhost:9002/api/pedido/";
+    private static final String GET_DETALLE_URL = "detalle/";
 
     @Override
     public Material crearMaterial(Material m) {
@@ -131,33 +137,44 @@ public class MaterialServiceImpl implements MaterialService{
     }
 
     @Override
-    public void registrarMovimientoStock(PedidoDTO pedidoDTO) {
-        //TODO revisar si anda artemis?
-        
-        //Se registra un movimiento de stock del producto y además actualizará el stock actual en la tabla de productos.
-        //Si se llegó a un stock debajo del mínimo se crea una nueva orden de provisión.
+    public void registrarMovimientoStock(ArrayList<Integer> idsDetalles) {
+        List<DetalleProvision> listaDetallesProvision = new ArrayList<>();
 
-        Map<Integer, Integer> mapIdMaterialesCant = pedidoDTO.getDetallePedidoDTOList()
-                                                    .stream().collect(Collectors
-                        .toMap(detallePedidoDTO -> detallePedidoDTO.getProductoId(), detallePedidoDTO -> detallePedidoDTO.getCantidad()));
+        for(Integer id : idsDetalles){
+            String url = REST_API_PEDIDO_URL + GET_DETALLE_URL + id;
+            WebClient client = WebClient.create(url);
 
-        List<Integer> idMateriales = new ArrayList<>(mapIdMaterialesCant.keySet());
-        List<Material> listaMateriales = idMateriales.stream().map( id -> buscarPorId(id)).collect(Collectors.toList());
-        List<DetalleProvision> listaDetalles = new ArrayList<>();
-        Integer cantidad;
+            DetallePedidoDTO detalle= client.get()
+                    .uri(url).accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(DetallePedidoDTO.class)
+                    .block();
 
-        for(Material m: listaMateriales){
-            cantidad = mapIdMaterialesCant.get(m.getId());
+            Integer idProducto = detalle.getIdProducto();
+            Integer cantidad = detalle.getCantidad();
+            MovimientoStock newMovimiento;
 
-            m.setStockActual(m.getStockActual() - cantidad);
+            if(materialRepository.findById(idProducto).isPresent()){
+                Material m = materialRepository.findById(idProducto).get();
+                m.setStockActual(m.getStockActual()-cantidad);
+                materialRepository.save(m);
 
-            if(m.getStockMinimo() >= m.getStockActual()){
-               listaDetalles.add(new DetalleProvision(m,cantidad));
+                if(m.getStockMinimo() >= m.getStockActual()){
+                    DetalleProvision newDetProv = new DetalleProvision();
+                    newDetProv.setMaterial(m);
+                    newDetProv.setCantidad(cantidad);
+                    listaDetallesProvision.add(newDetProv);
+                    newMovimiento = new MovimientoStock(newDetProv.getId(), m, 0, cantidad, new Date());
+                }else{
+                    newMovimiento = new MovimientoStock(m, 0, cantidad, new Date());
+                }
+                movimientoRepository.save(newMovimiento);
+            }else{
+                throw new RuntimeException("No existe el material de id "+idProducto);
             }
         }
-        if(!(listaDetalles.size() == 0)){
-            provisionService.crearProvision(listaDetalles);
-        }
-        materialRepository.saveAll(listaMateriales);
+
+        if(!(listaDetallesProvision.size() == 0))
+            provisionService.crearProvision(listaDetallesProvision);
     }
 }
