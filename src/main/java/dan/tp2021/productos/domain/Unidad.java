@@ -20,5 +20,12 @@ public class Unidad {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
+
+	public Unidad() {
+	}
+
+	public Unidad(Integer id, String descripcion) {
+		this.id = id;
+		this.descripcion = descripcion;
+	}
 }

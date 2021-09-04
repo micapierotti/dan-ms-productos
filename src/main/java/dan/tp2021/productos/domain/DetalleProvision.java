@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 public class DetalleProvision {
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
@@ -17,7 +18,6 @@ public class DetalleProvision {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	public Integer getCantidad() {
 		return cantidad;
 	}
@@ -30,7 +30,6 @@ public class DetalleProvision {
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
-	
-	
-	
+	public DetalleProvision() {
+	}
 }
